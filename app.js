@@ -2,6 +2,7 @@ const express=require("express")
 const mongoose=require("mongoose")
 const cors=require("cors")
 const userrouter=require("./controllers/userRouter")
+const resumeRouter=require("./controllers/resumeRouter")
 
 const app=express()
 
@@ -13,6 +14,7 @@ mongoose.connect("mongodb+srv://abhinandh:jazz9333@cluster0.ubk8s.mongodb.net/re
     useNewUrlParser:true
 })
 app.use("/resumeapp",userrouter)
+app.use("/resumebuilder",resumeRouter)
 
 app.listen(3005,()=>
 {
