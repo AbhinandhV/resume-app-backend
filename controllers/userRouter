@@ -3,41 +3,44 @@ const usermodels=require("../models/usermodel")
 const router=express.Router()
 const bcrypt=require("bcryptjs")
 
-const hashFunction=async(password)=>{
+const hasshfunction=async(password)=>
+{
     const salt=await bcrypt.genSalt(10)
-    return bcrypt.hash(password,salt)
+    return  bcrypt.hash(password,salt)
 }
 
 router.post("/add",async(req,res)=>
 {
-   let {data}={"data":req.body}
-   let password=data.password
-    const hashedpassword=await hashFunction(password).then((hashedpassword)=>{
+    let{data}={"data":req.body}
+    let passwords=data.password
+    const hashedpassword=await hasshfunction(passwords).then((hashedpassword)=>
+    {
         data.password=hashedpassword
-        let userobj=new usermodels(data)
-        let result=userobj.save()
+        const model=new usermodels(data)
+        model.save()
         res.json({status:"success"})
     })
-    
-  
+
 })
 
 router.post("/login",async(req,res)=>
 {
-    let email=req.body.emai
-    let inputpassword=req.body.password
-    let data=await usermodels.findOne({emai:email})
-    if(!data){
+    let data=req.body
+    let email=data.emai
+    let password=data.password
+    let details=await usermodels.findOne({emai:email})
+    if(!details)
+    {
         return(
             res.json({status:"no user"})
         )
     }
-    let dbpassword=data.password
-    const match=await bcrypt.compare(inputpassword,dbpassword)
-    if(!match){
+    dbpassword=data.password
+    const map=await bcrypt.compare(password,dbpassword)
+    if(!map)
+    {
         return(
-            res.json(
-                {status:"invalid password"})
+            res.json({status:"invalid credentials"})
         )
     }
     res.json({status:"success"})
